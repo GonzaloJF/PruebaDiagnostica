@@ -1,5 +1,7 @@
 -- Creacion de la base de datos.
-CREATE DATABASE prueba; 
+CREATE DATABASE prueba;
+
+\c prueba;
 
 -- Creacion de la tabla de bodegas
 CREATE TABLE bodegas(
