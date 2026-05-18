@@ -1,5 +1,10 @@
 const formulario = document.querySelector("#formularioProducto");
 
+const selectBodega = document.getElementById("bodega");
+const selectSucursal = document.getElementById("sucursal");
+
+const inputCodigo = document.getElementById("codigo");
+
 // Validacion codigo
 function validarCodigo(codigo) {
   const regexCodigo = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]/;
@@ -41,7 +46,7 @@ function validarPrecio(precio) {
   }
   return true;
 }
-//validacion de bodega
+//validacion de Material
 function validarMaterial(material) {
   if (material.length < 2) {
     alert("Debe seleccionar al menos dos materiales para el producto.");
@@ -49,6 +54,7 @@ function validarMaterial(material) {
   }
   return true;
 }
+//validacion Bodega
 function validarBodega(bodega) {
   if (bodega === "") {
     alert("Debe seleccionar una bodega.");
@@ -56,7 +62,7 @@ function validarBodega(bodega) {
   }
   return true;
 }
-
+//Validacion Sucurcales
 function validarSucursal(sucursal) {
   if (sucursal === "") {
     alert("Debe seleccionar una sucursal para la bodega seleccionada");
@@ -64,7 +70,7 @@ function validarSucursal(sucursal) {
   }
   return true;
 }
-
+// Validacion de Monedas
 function validarMoneda(moneda) {
   if (moneda === "") {
     alert("Debe seleccionar una moneda para el producto.");
@@ -72,7 +78,7 @@ function validarMoneda(moneda) {
   }
   return true;
 }
-
+// Validacion Descripciones
 function validarDescripcion(descripcion) {
   if (descripcion === "") {
     alert("La descripción del producto no puede estar en blanco.");
@@ -83,7 +89,83 @@ function validarDescripcion(descripcion) {
   }
   return true;
 }
-formulario.addEventListener("submit", (e) => {
+
+//evento selector sucursales dinamicas
+selectBodega.addEventListener("change", async (e) => {
+  const bodegaId = e.target.value;
+
+  selectSucursal.innerHTML = '<option value="">Selecccione</option>';
+
+  if (!bodegaId) {
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `../backend/sucursal.php?bodega_id=${bodegaId}`,
+    );
+
+    if (!response.ok) {
+      throw new Error("Error en la respuesta del servidor");
+    }
+
+    const sucursales = await response.json();
+
+    sucursales.forEach((sucursal) => {
+      const option = document.createElement("option");
+      option.value = sucursal.sucursal_id;
+      option.textContent = sucursal.nombre;
+      selectSucursal.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Error al cargar sucursales:", error);
+    alert("No se pudieron cargar las sucursales de esta bodega.");
+  }
+});
+
+//verificar si el codigo es unico:
+let codigoUninco = false;
+async function validarCodigoUnico(codigo) {
+  if (codigo === "") {
+    return false;
+  }
+
+  try {
+    const response = await fetch(`../backend/codigoUnico.php?codigo=${codigo}`);
+
+    if (!response.ok) {
+      throw new Error(
+        "Error en la respuesta del servidor al verificar el código",
+      );
+    }
+
+    const data = await response.json();
+
+    if (data.existe) {
+      alert("El código del producto ya está registrado.");
+      codigoUnico = false;
+      return false;
+    } else {
+      codigoUnico = true;
+      return true;
+    }
+  } catch (error) {
+    console.error("Error en la validación de unicidad: ", error);
+    codigoUnico = false;
+    return false;
+  }
+}
+//eventos validar el input codigo
+inputCodigo.addEventListener("blur", async (e) => {
+  const codigo = e.target.value.trim();
+
+  if (validarCodigo(codigo)) {
+    await validarCodigoUnico(codigo);
+  }
+});
+
+//Evento formularios
+formulario.addEventListener("submit", async (e) => {
   e.preventDefault();
   //capturar los campos del formulario
   const codigo = document.getElementById("codigo").value.trim();
@@ -101,6 +183,10 @@ formulario.addEventListener("submit", (e) => {
   const descripcion = document.getElementById("descripcion").value.trim();
 
   if (!validarCodigo(codigo)) {
+    return;
+  }
+  const esUnico = await validarCodigoUnico(codigo);
+  if (!esUnico) {
     return;
   }
   if (!validarNombre(nombre)) {
@@ -135,5 +221,29 @@ formulario.addEventListener("submit", (e) => {
     material: material,
     descripcion: descripcion,
   };
-  console.log(data);
+  try {
+    const response = await fetch("../backend/guardarProducto.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const resultado = await response.json();
+
+    if (response.ok && resultado.success) {
+      alert(resultado.message);
+      formulario.reset();
+      document.getElementById("sucursal").innerHTML =
+        '<option value="">Seleccione</option>';
+    } else {
+      alert(
+        "Error: " +
+          (resultado.message || "No se pudo procesar la soluicitud. "),
+      );
+    }
+  } catch (error) {
+    console.error("Error al intentar guardar el producto: ", error);
+    alert("Ocurrió un error critico al intentar conectar con el servidor");
+  }
 });
