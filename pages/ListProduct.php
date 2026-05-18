@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <Link rel="stylesheet" href="../css/app.css"></Link>
+  <link  rel="stylesheet" href="../css/app.css"></link>
 </head>
 <body>
   <?php
@@ -26,7 +26,9 @@
     <nav class="menu">
       <a href="./createProduct.php" class="navButton">Crear Productos</a>
     </nav>
-
+    <div class="Titulo-pagina">
+      <h1 class="Titulo">Lista de productos</h1>
+    </div>
     <div class="page">
       <?php  foreach ($productos as $producto): ?>
       <div class="cards-productos">
@@ -38,7 +40,7 @@
           <p><?= htmlspecialchars($producto['descripcion'])  ?></p>
         </div>
         <div class="precio">
-          <div>precio:</div>
+          <div>Precio:</div>
           <p><strong><?= htmlspecialchars($producto['abreviacion']) ?></strong> 
             <?= htmlspecialchars(number_format($producto['precio_producto'], 2)) ?></p>
         </div>
