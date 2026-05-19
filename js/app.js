@@ -34,11 +34,12 @@ function validarNombre(nombre) {
 }
 //validacion de precios
 function validarPrecio(precio) {
+  const precioLimpio = precio.replace(",", ".");
   const regexPrecio = /^\d+(\.\d{1,2})?$/;
   if (precio === "") {
     alert("El precio del producto no puede estar en blanco");
     return false;
-  } else if (!regexPrecio.test(precio)) {
+  } else if (!regexPrecio.test(precio) || parseFloat(precioLimpio) <= 0) {
     alert(
       "El precio del producto debe ser un número positivo con hasta dos decimales",
     );

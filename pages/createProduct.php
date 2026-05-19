@@ -65,7 +65,7 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label for="mondeda">Mondeda</label>
+              <label for="mondeda">Moneda</label>
               <select id="moneda" name="moneda">
                 <option value="">Seleccione</option>
                     <?php foreach ($monedas as $moneda):?>
@@ -77,7 +77,7 @@
             </div>
             <div class="form-group">
               <label for="precio">Precio</label>
-              <input type="number" id="precio" name="precio" />
+              <input type="number" id="precio" name="precio" step="0.01"/>
             </div>
                     </div>
             <div class="form-group full-width">

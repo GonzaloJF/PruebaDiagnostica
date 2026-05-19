@@ -5,7 +5,7 @@ class CConexion{
   function ConexionBD(){
     $host = "localhost";
     $dbname = "prueba";
-    $username = "nombre usuario";
+    $username = "usuario";
     $password = "contraseña";
     
     $conn = null; 
