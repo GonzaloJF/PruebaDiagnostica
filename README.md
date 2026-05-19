@@ -1,6 +1,6 @@
 # instalacion
 
-para comenzar necesitamos tener instalado lo siguiente:
+Para comenzar necesitamos tener instalado lo siguiente:
 
 # Recursos
 
@@ -19,7 +19,7 @@ y luego verificamos las tablas con un \dt ó podemos hacer SELECT \* FROM ['nomb
 
 ## windows:
 
-podemos realizar lo mismo
+Podemos realizar lo mismo
 psql -U postgres ó [nombre de usuario que se ocupe en la base de datos]
 
 \i 'direccion donde esta el archivo database.sql' ejemplo (D:/programas/pruebaDiagnostica/database.sql)
@@ -39,4 +39,4 @@ Ahora tenemos que levantar el servidor php dentro de la carpeta del proyecto con
 
 php -S localhost:8000
 
-y ya deberiamos poder probar la plataforma.
+Y ya deberiamos poder probar la plataforma.
