@@ -5,8 +5,8 @@ class CConexion{
   function ConexionBD(){
     $host = "localhost";
     $dbname = "prueba";
-    $username = "postgres";
-    $password = "War.Amumu132132";
+    $username = "nombre usuario";
+    $password = "contraseña";
     
     $conn = null; 
 
